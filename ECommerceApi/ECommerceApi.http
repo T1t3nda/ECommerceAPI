@@ -1,0 +1,258 @@
+### Variables
+@baseUrl = http://localhost:5226
+
+### Auth Controller
+
+### Register a new user
+# @name registerCustomer
+POST {{baseUrl}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "Password123!",
+  "confirmPassword": "Password123!"
+}
+
+### Register an admin user
+# @name registerAdmin
+POST {{baseUrl}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Admin123!",
+  "confirmPassword": "Admin123!"
+}
+
+### Login as Customer
+# @name loginCustomer
+POST {{baseUrl}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@example.com",
+  "password": "Password123!",
+  "rememberMe": true
+}
+
+### Store the cookie from the customer login response
+@customerCookie = {{loginCustomer.response.headers.set-cookie}}
+
+### Admin Login
+# @name loginAdmin
+POST {{baseUrl}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Admin123!",
+  "rememberMe": true
+}
+
+### Store the cookie from the admin login response
+@adminCookie = {{loginAdmin.response.headers.set-cookie}}
+
+### Logout (Customer)
+POST {{baseUrl}}/api/Auth/logout
+Cookie: {{customerCookie}}
+
+### User Controller
+
+### Get User Profile (Customer)
+GET {{baseUrl}}/api/User/profile
+Cookie: {{customerCookie}}
+
+### Change Password (Customer)
+PUT {{baseUrl}}/api/User/change-password
+Cookie: {{customerCookie}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password123!",
+  "newPassword": "NewPassword123!",
+  "confirmPassword": "NewPassword123!"
+}
+
+### Get All Users (Admin only)
+GET {{baseUrl}}/api/User/users
+Cookie: {{adminCookie}}
+
+### Assign Role to User (Admin only)
+POST {{baseUrl}}/api/User/assign-role
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "userId": "USER_ID_HERE",
+  "role": "Manager"
+}
+
+### Remove Role from User (Admin only)
+POST {{baseUrl}}/api/User/remove-role
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "userId": "USER_ID_HERE",
+  "role": "Manager"
+}
+
+### Products Controller
+
+### Get All Products (No auth required)
+GET {{baseUrl}}/api/Products
+
+### Get Product by ID (No auth required)
+GET {{baseUrl}}/api/Products/2
+
+### Get Products by Category (No auth required)
+GET {{baseUrl}}/api/Products/category/1
+
+### Create Product (Admin/Manager only)
+POST {{baseUrl}}/api/Products
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "name": "New Product",
+  "description": "This is a new product",
+  "price": 29.99,
+  "stockQuantity": 100,
+  "categoryId": 1,
+  "imageUrl": "product1.jpg"
+}
+
+### Update Product (Admin/Manager only)
+PUT {{baseUrl}}/api/Products/1
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Updated Product",
+  "description": "This is an updated product",
+  "price": 39.99,
+  "stockQuantity": 150,
+  "categoryId": 1,
+  "imageUrl": "product1_updated.jpg"
+}
+
+### Delete Product (Admin only)
+DELETE {{baseUrl}}/api/Products/1
+Cookie: {{adminCookie}}
+
+### Categories Controller
+
+### Get All Categories (No auth required)
+GET {{baseUrl}}/api/Categories
+
+### Get Category by ID (No auth required)
+GET {{baseUrl}}/api/Categories/1
+
+### Create Category (Admin only)
+POST {{baseUrl}}/api/Categories
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "name": "New Category",
+  "description": "This is a new category"
+}
+
+### Update Category (Admin only)
+PUT {{baseUrl}}/api/Categories/1
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Updated Category",
+  "description": "This is an updated category"
+}
+
+### Delete Category (Admin only)
+DELETE {{baseUrl}}/api/Categories/1
+Cookie: {{adminCookie}}
+
+### Cart Controller
+
+### Get Cart (Customer)
+GET {{baseUrl}}/api/Cart
+Cookie: {{customerCookie}}
+
+### Add Item to Cart (Customer)
+POST {{baseUrl}}/api/Cart/items
+Cookie: {{customerCookie}}
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 2
+}
+
+### Update Cart Item (Customer)
+PUT {{baseUrl}}/api/Cart/items/1
+Cookie: {{customerCookie}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### Remove Item from Cart (Customer)
+DELETE {{baseUrl}}/api/Cart/items/1
+Cookie: {{customerCookie}}
+
+### Clear Cart (Customer)
+DELETE {{baseUrl}}/api/Cart
+Cookie: {{customerCookie}}
+
+### Orders Controller
+
+### Get All Orders (Admin/Manager only)
+GET {{baseUrl}}/api/Orders
+Cookie: {{adminCookie}}
+
+### Get Order by ID (Customer for own orders, Admin/Manager for any)
+GET {{baseUrl}}/api/Orders/1
+Cookie: {{customerCookie}}
+
+### Get My Orders (Customer)
+GET {{baseUrl}}/api/Orders/my-orders
+Cookie: {{customerCookie}}
+
+### Create Order (Customer)
+POST {{baseUrl}}/api/Orders
+Cookie: {{customerCookie}}
+Content-Type: application/json
+
+{
+  "orderItems": [
+    {
+      "productId": 1,
+      "quantity": 2,
+      "unitPrice": 29.99
+    }
+  ],
+  "shippingAddress": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA",
+    "zipCode": "12345",
+    "country": "USA"
+  },
+  "paymentMethod": "Credit Card",
+  "paymentDetails": {
+    "cardNumber": "XXXX-XXXX-XXXX-1234", 
+    "expiryDate": "12/25",
+    "cardHolderName": "John Doe"
+  }
+}
+
+### Update Order Status (Admin/Manager only)
+PUT {{baseUrl}}/api/Orders/1/status
+Cookie: {{adminCookie}}
+Content-Type: application/json
+
+"Shipped"

@@ -40,8 +40,8 @@ The solution is structured using Clean Architecture with clearly separated conce
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ecommerce-api.git
-   cd ecommerce-api
+   git clone https://github.com/T1t3nda/ECommerceAPI.git
+   cd ECommerceAPI
    ```
 
 2. Update the connection string in `ECommerce.API/appsettings.json` with your database information:

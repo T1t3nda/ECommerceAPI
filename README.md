@@ -25,7 +25,6 @@ The solution is structured using Clean Architecture with clearly separated conce
 - **Entity Framework Core**: ORM for database operations
 - **ASP.NET Core Identity**: Authentication and authorization
 - **AutoMapper**: Object-to-object mapping
-- **Swagger/OpenAPI**: API documentation
 - **SQL Server**: Database (configurable)
 
 ## 🚀 Getting Started
@@ -179,8 +178,3 @@ The application automatically seeds the database with initial data when running 
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📞 Contact
-
-Your Name - [@your_twitter](https://twitter.com/your_twitter) - email@example.com
-
-Project Link: [https://github.com/yourusername/ecommerce-api](https://github.com/yourusername/ecommerce-api)
